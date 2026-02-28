@@ -1,0 +1,21 @@
+Frontend (React)
+        ↓ API call
+Backend (FastAPI / Node)
+        ↓
+ML Model (Python)
+        ↓
+Database (MongoDB)
+---------------------------------------------
+React → FastAPI → ML Model → MongoDB
+---------------------------------------------
+User → fills profile 
+↓		   
+React → sends JSON  
+↓                 
+FastAPI → runs ML model 
+↓
+Recommendation returned 
+↓
+React → displays course 
+---------------------------------------------
+The system is horizontally scalable by increasing FastAPI workers, using MongoDB clustering, and optionally deploying the ML model as a separate service for high-load scenarios.

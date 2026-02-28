@@ -1,0 +1,47 @@
+Frontend (React)
+        ↓ API call
+Backend (FastAPI / Node)
+        ↓
+ML Model (Python)
+        ↓
+Database (MongoDB)
+
+-----------------------------------
+
+What ML Model You Used
+
+Right now your system uses:
+
+✅ Decision Tree Classifier
+
+(from scikit-learn)
+
+🔍 What is a Decision Tree?
+
+A Decision Tree is a supervised machine learning algorithm that:
+
+learns from labeled data
+
+creates if-else style rules
+
+makes predictions by splitting features
+
+Think of it like a flowchart.
+
+🌳 Simple Idea
+
+Your model learned patterns like:
+
+IF class_level = 9 AND weak_subject = Math
+    → recommend Math Foundation
+
+-----------------------------------------------------------------------
+
+Is weak_subject = Math?
+   YES → Is class_level ≤ 9?
+              YES → Math Foundation
+              NO → Math Advanced
+   NO → other branch…
+
+----------------------------------------------------------------------------
+It represents the model’s predicted probability for the selected class.
