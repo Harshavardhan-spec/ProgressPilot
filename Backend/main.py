@@ -5,15 +5,14 @@ import pandas as pd
 from pymongo import MongoClient
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
-
 import subprocess
-
+#This code is for integrating ml and 
 def trigger_retraining():
     try:
         print("🚀 Triggering model retraining...")
         subprocess.Popen(["python", "retrain_model.py"])
     except Exception as e:
-        print("❌ Retraining failed:", e)
+        print("Retraining failed:", e)
 
 COURSE_RESOURCES = {
     "Math Foundation": {
@@ -22,32 +21,40 @@ COURSE_RESOURCES = {
             {"title": "Quadratic Equations", "url": "https://www.youtube.com/playlist?list=PLU_DCVXL8MyMZ5nO2RajVuRWGRBt5XxQb"}
         ],
         "books": [
-            {"title": "NCERT Mathematics Class 10"},
+            {"title": "NCERT Mathematics Class"},
             {"title": "RD Sharma Algebra"}
         ]
     },
     "JEE Physics": {
         "videos": [
-            {"title": "Kinematics Full Course", "url": "https://youtu.be/abc123"}
+            {"title": "Kinematics Full Course", "url": "https://www.youtube.com/watch?v=b1t41Q3xRM8&list=PL0o_zxa4K1BU6wPPLDsoTj1_wEf0LSNeR"}
         ],
         "books": [
             {"title": "HC Verma Vol 1"}
         ]
+    },
+    "Chemistry booster": {
+        "videos": [
+            {"title": "Chemical Reactions Full Course", "url": "https://www.youtube.com/watch?v=EhVf0hkY4xc&list=PLVLoWQFkZbhV8gdBQOVjUpLW_3jwak-uA"}
+        ],
+        "books": [
+            {"title": "RCTV Vol 1"}
+        ]
     }
 }
 
-app = FastAPI(title="AI Learning Platform")
+app = FastAPI(title="Project_M")
 
-# CORS middleware
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # for development
+    allow_origins=["*"],   
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 # =============================
-# MongoDB Connection
+# MongoDB connection for our proj
 # =============================
 MONGO_URL = "mongodb+srv://Harsha_Vinay:VH12@cluster0.vw91y2y.mongodb.net/?appName=Cluster0"
 
@@ -57,7 +64,7 @@ db = client["ai_learning"]
 collection = db["recommendations"]
 feedback_collection = db["feedback"]
 
-# ✅ Load model
+#Loading  ml - model
 model = joblib.load("model.pkl")
 columns = joblib.load("columns.pkl")
 class StudentInput(BaseModel):
@@ -123,10 +130,9 @@ def submit_feedback(feedback: FeedbackInput):
         "timestamp": datetime.utcnow()
     })
 
-    # ⭐ check feedback count
+    # checking feedback count (since ml should get retrained for every 20 feedbacks..)
     feedback_count = feedback_collection.count_documents({})
 
-    # ⭐ safer trigger
     if feedback_count > 0 and feedback_count % 20 == 0:
         trigger_retraining()
 
@@ -162,7 +168,7 @@ def get_analytics():
     avg_conf = list(collection.aggregate(avg_conf_pipeline))
     avg_conf_val = avg_conf[0]["avg_conf"] if avg_conf else 0
 
-    # ⭐ Course distribution for bar chart
+    # Course distribution for bar chart
     course_pipeline = [
     {"$group": {"_id": "$recommended_course", "count": {"$sum": 1}}},
     {"$sort": {"count": -1}}
